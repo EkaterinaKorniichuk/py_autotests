@@ -2,38 +2,24 @@ from playwright.sync_api import sync_playwright
 from credentials import username, password, SWAG_BASE_URL
 from page_actions import login
 
-   # when
-def test_login_successful():
-  with sync_playwright() as playwright:
-    browser = playwright.chromium.launch()
-    page = browser.new_page()
+def test_successful_login():
+    with sync_playwright() as playwright:
+        browser = playwright.chromium.launch()
+        page = browser.new_page()
 
-    #def test_login_successful(): позволяет pytest автоматически обнаруживать
-    #и выполнять эту функцию в качестве теста при запуске тестового процесса.
-    #Плюс у нас есть from page_actions import login выше
+        # Выполнение входа с корректными учетными данными
+        login(page, SWAG_BASE_URL, username, password)
 
-    login(page, SWAG_BASE_URL, username, password)
+        # Проверка заголовка страницы после успешного входа
+        page_title = page.title()
+        assert page_title == "Swag Labs"
 
-    # then
-    page_title = page.title()
-    assert page_title == "Swag Labs"
-    print("Products page loaded successfully.")
-    browser.close()
+        # Проверка наличия продуктов на странице после успешного входа
+        assert page.inner_html(".inventory_list") != ""
 
+        # Закрытие браузера
+        browser.close()
 
-    #assert используется для проверки того, что заголовок страницы (полученный с помощью page.title()) соответствует ожидаемому значению "Swag Labs".
-    #Если условие page_title == "Swag Labs" истинно,
-    # то программа продолжает выполнение без изменений,
-    # и выводится сообщение "Products page loaded successfully.".
-    # Если условие ложно, assert генерирует исключение AssertionError,
-    # которое может быть обработано далее в программе.
-    # Это помогает убедиться, что страница загрузилась правильно и содержит ожидаемый заголовок.
-
-
-    # loginPage = LoginPage()
-    # loginPage.go_to()
-    #
-    # loginPage.username.fill("standard_user")
-    # loginPage.password.fill("secret_sauce")
-    #
-    # loginPage.submit()
+# Запуск теста
+if __name__ == "__main__":
+    test_successful_login()
