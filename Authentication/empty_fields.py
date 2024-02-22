@@ -17,7 +17,7 @@ def test_login_successful():
     print("Authentication error message displayed successfully.")
     browser.close()
 
-
+#empty_password test 
 
 from playwright.sync_api import sync_playwright
 from credentials import empty_password, username, SWAG_BASE_URL
