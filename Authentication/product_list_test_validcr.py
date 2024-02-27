@@ -7,7 +7,9 @@ def test_product_list_():
         browser = playwright.chromium.launch()
         page = browser.new_page()
 
-        login(page, SWAG_BASE_URL, username, password, Inventory_URL)
+        login(page, SWAG_BASE_URL, username, password)
+
+        page.goto(Inventory_URL)
 
         assert page.url == 'https://www.saucedemo.com/inventory.html'
         inventory_container_text = page.inner_text('.inventory_list')
