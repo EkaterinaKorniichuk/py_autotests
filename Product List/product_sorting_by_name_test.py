@@ -26,6 +26,8 @@ def test_sorting_product_az():
         option_name_az = page.wait_for_selector('option[value="az"]')
         option_name_az.click()
 
+        #still working
+
 
 
 
