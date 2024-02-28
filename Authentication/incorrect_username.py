@@ -1,6 +1,6 @@
 from playwright.sync_api import sync_playwright
-from credentials import incorrect_username, password, SWAG_BASE_URL
-from page_actions import login
+from util.credentials import incorrect_username, password, SWAG_BASE_URL
+from util.page_actions import login
 
 
    # when

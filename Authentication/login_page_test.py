@@ -1,5 +1,5 @@
 from playwright.sync_api import sync_playwright
-from credentials import SWAG_BASE_URL
+from util.credentials import SWAG_BASE_URL
 
 def test_login_page():
  with sync_playwright() as playwright:
