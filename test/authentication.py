@@ -12,7 +12,7 @@ def test_login_page_displays_correctly():
     page.goto(SWAG_BASE_URL)
 
     #Check the page title
-    page_title = page.text_content("login_logo")
+    page_title = page.title()
     assert page_title == "Swag Labs"
 
     #Ckeck "Login" button
@@ -61,7 +61,7 @@ def test_incorrect_password():
     browser = playwright.chromium.launch(headless=False, slow_mo=500)
     page = browser.new_page()
 
-    login(page, SWAG_BASE_URL, incorrect_password, username)
+    login(page, SWAG_BASE_URL, username, incorrect_password)
 
 
 
@@ -93,7 +93,7 @@ def test_login_failed_when_empty_password():
     browser = playwright.chromium.launch(headless=False, slow_mo=500)
     page = browser.new_page()
 
-    login(page, SWAG_BASE_URL, empty_password, username)
+    login(page, SWAG_BASE_URL, username, empty_password)
 
     #then
     error_message = page.text_content('.error-message-container h3')
