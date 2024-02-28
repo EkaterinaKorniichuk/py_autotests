@@ -4,7 +4,7 @@ from util.page_actions import login
 
 def test_shopping_cart_item_successful():
     with sync_playwright() as playwright:
-        
+
         browser = playwright.chromium.launch(headless=False, slow_mo=500)
         page = browser.new_page()
 
