@@ -5,7 +5,7 @@ from util.page_actions import login
 def test_product_list():
     with sync_playwright() as playwright:
         # given
-        browser = playwright.chromium.launch()
+        browser = playwright.chromium.launch(headless=False, slow_mo=500)
         page = browser.new_page()
 
         login(page, SWAG_BASE_URL, username, password)
