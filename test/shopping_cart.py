@@ -5,19 +5,13 @@ from util.page_actions import login
 def test_shopping_cart_item_successful():
     with sync_playwright() as playwright:
 
-        browser = playwright.chromium.launch(headless=False, slow_mo=500)
+        browser = playwright.chromium.launch(headless=False, slow_mo=1000)
         page = browser.new_page()
 
         login(page, SWAG_BASE_URL, username, password)
 
         page.goto(Inventory_URL)
 
-        product = page.wait_for_selector('.inventory_item')
+        product = page.wait_for_selector('id="item_4_title_link"')
         product.click()
 
-        add_to_cart_button = page.wait_for_selector('.btn_inventory')
-        add_to_cart_button.click()
-
-        page.goto('https://www.saucedemo.com/cart.html')
-
-        browser.close()

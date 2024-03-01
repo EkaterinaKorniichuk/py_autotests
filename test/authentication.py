@@ -4,74 +4,64 @@ from util.page_actions import login
 
 def test_login_page_displays_correctly():
  with sync_playwright() as playwright:
-    # Launch a browser
+    # given
     browser = playwright.chromium.launch(headless=False, slow_mo=500)
-    # Create a new page
     page = browser.new_page()
-    # Visit the Swag_Labs website
+
+    # when
     page.goto(SWAG_BASE_URL)
 
-    #Check the page title
+    # then
     page_title = page.title()
     assert page_title == "Swag Labs"
-
-    #Ckeck "Login" button
     login_button = page.wait_for_selector("#login-button")
     assert login_button is not None
-
-
     browser.close()
-
-
-
 
 def test_successful_login():
   with sync_playwright() as playwright:
+    # given
     browser = playwright.chromium.launch(headless=False, slow_mo=500)
     page = browser.new_page()
 
+    # when
     login(page, SWAG_BASE_URL, username, password)
 
+    # then
     page_title = page.title()
     assert page_title == "Swag Labs"
     assert page.inner_html(".inventory_list") != ""
     browser.close()
 
-
-if __name__ == "__main__":
-  test_successful_login()
-
-
 def test_incorrect_username():
   with sync_playwright() as playwright:
+    # given
     browser = playwright.chromium.launch(headless=False, slow_mo=500)
     page = browser.new_page()
 
+    # when
     login(page, SWAG_BASE_URL, incorrect_username, password)
 
-    #then
+    # then
     error_message = page.text_content('.error-message-container h3')
     assert "Epic sadface: Username and password do not match any user in this service" in error_message
     print("Authentication error message displayed successfully.")
     browser.close()
-
 
 def test_incorrect_password():
  with sync_playwright() as playwright:
+    # given
     browser = playwright.chromium.launch(headless=False, slow_mo=500)
     page = browser.new_page()
 
+    # when
     login(page, SWAG_BASE_URL, username, incorrect_password)
 
-
-
-    #then
+    # then
     error_message = page.text_content('.error-message-container h3')
     assert "Epic sadface: Username and password do not match any user in this service" in error_message
     print("Authentication error message displayed successfully.")
     browser.close()
-
-
 
 def test_login_failed_when_empty_username():
   with sync_playwright() as playwright:
@@ -90,12 +80,14 @@ def test_login_failed_when_empty_username():
 
 def test_login_failed_when_empty_password():
   with sync_playwright() as playwright:
+    # given
     browser = playwright.chromium.launch(headless=False, slow_mo=500)
     page = browser.new_page()
 
+    # when
     login(page, SWAG_BASE_URL, username, empty_password)
 
-    #then
+    # then
     error_message = page.text_content('.error-message-container h3')
     assert "Epic sadface: Username and password do not match any user in this service" in error_message
     print("Authentication error message displayed successfully.")
