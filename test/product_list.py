@@ -39,16 +39,21 @@ def test_sorting_product_az():
         # given
         browser = playwright.chromium.launch(headless=False, slow_mo=500)
         page = browser.new_page()
-
-        # when
         login(page, SWAG_BASE_URL, username, password)
 
-        # then
+        # when
         page.goto(Inventory_URL)
-        select_container = page.locator("button#product_sort_container")
         dropdown_button = page.wait_for_selector('.product_sort_container')
         dropdown_button.click()
         dropdown_button.select_option(label='Name (A to Z)')
+
+        # then
+        products = page.query_selector_all('.inventory_item_name')
+        product_names = [product.text_content() for product in products]
+        product_names.sort()
+        assert [product.text_content() for product in products] == product_names
+
+
         browser.close()
 
 def test_sorting_product_za():
@@ -56,16 +61,20 @@ def test_sorting_product_za():
         # given
         browser = playwright.chromium.launch(headless=False, slow_mo=500)
         page = browser.new_page()
-
-        # when
         login(page, SWAG_BASE_URL, username, password)
 
-        # then
+        # when
         page.goto(Inventory_URL)
-        select_container = page.locator("button#product_sort_container")
         dropdown_button = page.wait_for_selector('.product_sort_container')
         dropdown_button.click()
         dropdown_button.select_option(label='Name (Z to A)')
+
+        # then
+        products = page.query_selector_all('.inventory_item_name')
+        product_names = [product.text_content() for product in products]
+        product_names.sort(reverse=True)
+        assert [product.text_content() for product in products] == product_names
+
         browser.close()
 
 def test_sorting_product_lohi():
@@ -73,16 +82,20 @@ def test_sorting_product_lohi():
         # given
         browser = playwright.chromium.launch(headless=False, slow_mo=500)
         page = browser.new_page()
-
-        # when
         login(page, SWAG_BASE_URL, username, password)
 
-        # then
+        # when
         page.goto(Inventory_URL)
-        select_container = page.locator("button#product_sort_container")
         dropdown_button = page.wait_for_selector('.product_sort_container')
         dropdown_button.click()
         dropdown_button.select_option(label='Price (low to high)')
+
+        # then
+        products = page.query_selector_all('.inventory_item_name')
+        product_names = [product.text_content() for product in products]
+        product_names.sort()
+        assert [product.text_content() for product in products] == product_names
+
         browser.close()
 
 def test_sorting_product_hilo():
@@ -96,10 +109,26 @@ def test_sorting_product_hilo():
 
         # then
         page.goto(Inventory_URL)
-        select_container = page.locator("button#product_sort_container")
+
         dropdown_button = page.wait_for_selector('.product_sort_container')
         dropdown_button.click()
         dropdown_button.select_option(label='Price (high to low)')
         browser.close()
 
+
+def test_product_page_displays_correctly():
+    with sync_playwright() as playwright:
+        # given
+        browser = playwright.chromium.launch(headless=False, slow_mo=500)
+        page = browser.new_page()
+
+        # when
+        login(page, SWAG_BASE_URL, username, password)
+        page.goto(Inventory_URL)
+
+        # then
+        product = page.get_by_text('Sauce Labs Backpack')
+        product.click()
+
+        browser.close()
 
