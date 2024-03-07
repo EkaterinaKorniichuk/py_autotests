@@ -31,7 +31,6 @@ def test_product_list_invalid_credentials():
         page.goto(Inventory_URL)
         error_message = page.text_content('.error-message-container h3')
         assert "Epic sadface: You can only access '/inventory.html' when you are logged in" in error_message
-        print("Authentication error message displayed successfully.")
         browser.close()
 
 def test_sorting_product_az():

@@ -45,7 +45,6 @@ def test_incorrect_username():
     # then
     error_message = page.text_content('.error-message-container h3')
     assert "Epic sadface: Username and password do not match any user in this service" in error_message
-    print("Authentication error message displayed successfully.")
     browser.close()
 
 def test_incorrect_password():
@@ -60,7 +59,6 @@ def test_incorrect_password():
     # then
     error_message = page.text_content('.error-message-container h3')
     assert "Epic sadface: Username and password do not match any user in this service" in error_message
-    print("Authentication error message displayed successfully.")
     browser.close()
 
 def test_login_failed_when_empty_username():
@@ -75,7 +73,6 @@ def test_login_failed_when_empty_username():
     # then [I check this]
     error_message = page.text_content('.error-message-container h3')
     assert "Epic sadface: Username and password do not match any user in this service" in error_message
-    print("Authentication error message displayed successfully.")
     browser.close()
 
 def test_login_failed_when_empty_password():
@@ -90,5 +87,4 @@ def test_login_failed_when_empty_password():
     # then
     error_message = page.text_content('.error-message-container h3')
     assert "Epic sadface: Username and password do not match any user in this service" in error_message
-    print("Authentication error message displayed successfully.")
     browser.close()
