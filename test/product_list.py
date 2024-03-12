@@ -2,6 +2,7 @@ from playwright.sync_api import sync_playwright
 from util.credentials import username, incorrect_username, password, SWAG_BASE_URL, Inventory_URL
 from util.page_actions import login
 
+
 def test_product_list_valid_сredentials():
     with sync_playwright() as playwright:
         # given
