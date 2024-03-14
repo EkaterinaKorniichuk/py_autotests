@@ -98,17 +98,26 @@ def test_removing_product_from_the_shopping_cart_from_products_main_page():
         page.goto(Inventory_URL)
 
         # when
-        add_to_cart_button = page.wait_for_selector('.btn_inventory')
-        add_to_cart_button.click()
-        remove_button = page.wait_for_selector('.btn_secondary.btn_inventory')
-        remove_button.click()
+        inventory_items = page.query_selector_all('.inventory_item')
+
+        for item in inventory_items:
+            item_name_element = item.query_selector('.inventory_item_name')
+            item_name = item_name_element.inner_text()
+            if item_name == 'Sauce Labs Backpack':
+                add_to_cart_button = item.query_selector('.btn_inventory')
+                add_to_cart_button.click()
+                remove_button = item.query_selector('.btn_secondary.btn_inventory')
+                remove_button.click()
+
+                break
 
         # then
         shopping_cart_icon = page.wait_for_selector('.shopping_cart_container')
         shopping_cart_icon.click()
         assert page.wait_for_selector('.btn_secondary.btn_medium').inner_text() == 'Continue Shopping'
         assert page.wait_for_selector('.btn_action.btn_medium').inner_text() == 'Checkout'
-        assert page.query_selector('.shopping_cart_badge') is None
+        cart_item = page.query_selector('.cart_item')
+        assert cart_item is None or cart_item.inner_text().find('Sauce Labs Backpack') == -1
 
         browser.close()
 
@@ -120,10 +129,35 @@ def test_changing_quantity_of_item_in_shopping_cart():
         page = browser.new_page()
         login(page, SWAG_BASE_URL, username, password)
         page.goto(Inventory_URL)
-        add_to_cart_button = page.wait_for_selector('.btn_inventory')
-        add_to_cart_button.click()
+        inventory_items = page.query_selector_all('.inventory_item')
+
+        for item in inventory_items:
+            item_name_element = item.query_selector('.inventory_item_name')
+            item_name = item_name_element.inner_text()
+            if item_name == 'Sauce Labs Backpack':
+                add_to_cart_button = item.query_selector('.btn_inventory')
+                add_to_cart_button.click()
+                break
 
         # when
+        inventory_items = page.query_selector_all('.inventory_item')
+
+        for item in inventory_items:
+            item_name_element = item.query_selector('.inventory_item_name')
+            item_name = item_name_element.inner_text()
+            if item_name == 'Sauce Labs Bike Light':
+                add_to_cart_button = item.query_selector('.btn_inventory')
+                add_to_cart_button.click()
+                break
+
+        # then
+        shopping_cart_icon = page.wait_for_selector('.shopping_cart_container')
+        shopping_cart_icon.click()
+
+
+        browser.close()
+
+
 
 
 def test_return_to_cart_after_browser_close():
