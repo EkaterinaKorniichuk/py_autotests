@@ -1,6 +1,7 @@
 from playwright.sync_api import sync_playwright
 from util.credentials import username, password, SWAG_BASE_URL, Inventory_URL
 from util.page_actions import login
+from util.page_actions import add_product_to_cart
 
 
 def test_shopping_cart_item_add_from_main_page():
@@ -63,12 +64,6 @@ def test_shopping_cart_item_successful_from_prodpage():
 
         browser.close()
 
-def add_product_to_cart(page, product_name):
-    page.goto(Inventory_URL)
-    product = page.get_by_text(product_name)
-    product.click()
-    add_to_cart_button = page.wait_for_selector('.btn_inventory')
-    add_to_cart_button.click()
 
 def test_removing_product_from_the_shopping_cart_from_product_page():
     with sync_playwright() as playwright:
