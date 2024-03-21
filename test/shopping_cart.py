@@ -3,7 +3,6 @@ from util.credentials import username, password, SWAG_BASE_URL, Inventory_URL
 from util.page_actions import login
 from util.page_actions import add_product_to_cart
 
-
 def test_shopping_cart_item_add_from_main_page():
     with sync_playwright() as playwright:
         # given
@@ -14,7 +13,6 @@ def test_shopping_cart_item_add_from_main_page():
 
         # when
         page.get_by_text('Sauce Labs Backpack');
-
         inventory_items = page.query_selector_all('.inventory_item')
 
         for item in inventory_items:
@@ -38,7 +36,7 @@ def test_shopping_cart_item_add_from_main_page():
         browser.close()
 
 
-def test_shopping_cart_item_successful_from_prodpage():
+def test_shopping_cart_item_successful_add_from_prodpage():
     with sync_playwright() as playwright:
         # given
         browser = playwright.chromium.launch(headless=False, slow_mo=1000)
@@ -71,7 +69,6 @@ def test_removing_product_from_the_shopping_cart_from_product_page():
         browser = playwright.chromium.launch(headless=False, slow_mo=1000)
         page = browser.new_page()
         login(page, SWAG_BASE_URL, username, password)
-
         add_product_to_cart(page, 'Sauce Labs Backpack')
         add_product_to_cart(page, 'Sauce Labs Bike Light')
 
@@ -94,7 +91,6 @@ def test_removing_product_from_the_shopping_cart_from_product_page():
 
         browser.close()
 
-
 def test_removing_product_from_the_shopping_cart_from_products_main_page():
     with sync_playwright() as playwright:
         # given
@@ -102,8 +98,6 @@ def test_removing_product_from_the_shopping_cart_from_products_main_page():
         page = browser.new_page()
         login(page, SWAG_BASE_URL, username, password)
         page.goto(Inventory_URL)
-
-        # when
         inventory_items = page.query_selector_all('.inventory_item')
 
         for item in inventory_items:
@@ -117,9 +111,11 @@ def test_removing_product_from_the_shopping_cart_from_products_main_page():
 
                 break
 
-        # then
+        # when
         shopping_cart_icon = page.wait_for_selector('.shopping_cart_container')
         shopping_cart_icon.click()
+
+        # then
         assert page.wait_for_selector('.btn_secondary.btn_medium').inner_text() == 'Continue Shopping'
         assert page.wait_for_selector('.btn_action.btn_medium').inner_text() == 'Checkout'
         cart_item = page.query_selector('.cart_item')
@@ -128,14 +124,13 @@ def test_removing_product_from_the_shopping_cart_from_products_main_page():
         browser.close()
 
 
-def test_changing_quantity_of_item_in_shopping_cart():
+def test_add_to_items_in_shopping_cart_from_main_page():
     with sync_playwright() as playwright:
         # given
         browser = playwright.chromium.launch(headless=False, slow_mo=1000)
         page = browser.new_page()
         login(page, SWAG_BASE_URL, username, password)
         page.goto(Inventory_URL)
-        inventory_items = page.query_selector_all('.inventory_item')
 
         # when
         add_product_to_cart(page, 'Sauce Labs Backpack')
@@ -155,7 +150,8 @@ def test_return_to_cart_after_browser_close():
     with sync_playwright() as playwright:
         # given
         browser = playwright.chromium.launch(headless=False, slow_mo=1000)
-        page = browser.new_page()
+        context = browser.new_context()
+        page = context.new_page()
         login(page, SWAG_BASE_URL, username, password)
         page.goto(Inventory_URL)
         add_to_cart_button = page.wait_for_selector('.btn_inventory')
@@ -163,7 +159,7 @@ def test_return_to_cart_after_browser_close():
 
         # when
         page.close()
-        page = browser.new_page()
+        page = context.new_page()
         page.goto("https://www.saucedemo.com/cart.html")
 
         # then

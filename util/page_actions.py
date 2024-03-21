@@ -17,3 +17,11 @@ def add_product_to_cart(page, product_name):
    product.click()
    add_to_cart_button = page.wait_for_selector('.btn_inventory')
    add_to_cart_button.click()
+
+def add_product_to_cart_from_all_products(page, product_name):
+    assert isinstance(Inventory_URL, object)
+    page.goto(Inventory_URL)
+    product = page.query_selector(f'.inventory_item_label:has-text("{product_name}")')
+    product.click()
+    add_to_cart_button = page.wait_for_selector('.btn_inventory')
+    add_to_cart_button.click()
