@@ -1,7 +1,9 @@
 from playwright.sync_api import sync_playwright
 from util.credentials import username, password, SWAG_BASE_URL, Inventory_URL
 from util.page_actions import login
-from util.page_actions import add_product_to_cart
+from util.page_actions import add_product_to_cart, add_product_to_cart_from_all_products
+
+
 
 def test_shopping_cart_item_add_from_main_page():
     with sync_playwright() as playwright:
@@ -100,16 +102,16 @@ def test_removing_product_from_the_shopping_cart_from_products_main_page():
         page.goto(Inventory_URL)
         inventory_items = page.query_selector_all('.inventory_item')
 
-        for item in inventory_items:
-            item_name_element = item.query_selector('.inventory_item_name')
-            item_name = item_name_element.inner_text()
-            if item_name == 'Sauce Labs Backpack':
-                add_to_cart_button = item.query_selector('.btn_inventory')
-                add_to_cart_button.click()
-                remove_button = item.query_selector('.btn_secondary.btn_inventory')
-                remove_button.click()
-
-                break
+        # for item in inventory_items:
+        #     item_name_element = item.query_selector('.inventory_item_name')
+        #     item_name = item_name_element.inner_text()
+        #     if item_name == 'Sauce Labs Backpack':
+        #         add_to_cart_button = item.query_selector('.btn_inventory')
+        #         add_to_cart_button.click()
+        #         remove_button = item.query_selector('.btn_secondary.btn_inventory')
+        #         remove_button.click()
+        #
+        #         break
 
         # when
         shopping_cart_icon = page.wait_for_selector('.shopping_cart_container')
@@ -124,7 +126,7 @@ def test_removing_product_from_the_shopping_cart_from_products_main_page():
         browser.close()
 
 
-def test_add_to_items_in_shopping_cart_from_main_page():
+def test_add_two_items_in_shopping_cart_from_main_page():
     with sync_playwright() as playwright:
         # given
         browser = playwright.chromium.launch(headless=False, slow_mo=1000)
@@ -168,3 +170,36 @@ def test_return_to_cart_after_browser_close():
         assert page.query_selector('.inventory_item_name').inner_text() == 'Sauce Labs Backpack'
 
         browser.close()
+
+def test_checkout_page_is_displayed_correclty():
+    with sync_playwright() as playwright:
+        # given
+        browser = playwright.chromium.launch(headless=False, slow_mo=1000)
+        context = browser.new_context()
+        page = context.new_page()
+        login(page, SWAG_BASE_URL, username, password)
+        page.goto(Inventory_URL)
+        add_to_cart_button = page.wait_for_selector('.btn_inventory')
+        add_to_cart_button.click()
+        shopping_cart_icon = page.wait_for_selector('.shopping_cart_container')
+        shopping_cart_icon.click()
+        assert page.query_selector('.cart_item') is not None
+
+        # when
+        checkout_button = page.wait_for_selector('.btn_action.btn_medium')
+        checkout_button.click()
+
+        # then
+        assert "Swag Labs" in page.title()
+        assert page.query_selector('input[name="firstName"]') is not None
+        assert page.query_selector('input[name="lastName"]') is not None
+        assert page.query_selector('input[name="postalCode"]') is not None
+        assert page.query_selector('.cart_cancel_link.btn_secondary') is not None
+        assert page.query_selector('.btn_primary.cart_button') is not None
+
+        page.close()
+        context.close()
+        browser.close()
+
+
+
