@@ -1,5 +1,8 @@
 from playwright.sync_api import sync_playwright
-from util.credentials import username, password, empty_password, incorrect_username, incorrect_password, empty_username, SWAG_BASE_URL, Inventory_URL
+import sys
+import os
+sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
+from util.credentials import username, password, empty_password, incorrect_username, incorrect_password, empty_username, SWAG_BASE_URL
 from util.page_actions import login
 
 def test_login_page_displays_correctly():

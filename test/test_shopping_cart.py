@@ -1,8 +1,10 @@
 from playwright.sync_api import sync_playwright
+import sys
+import os
+sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 from util.credentials import username, password, SWAG_BASE_URL, Inventory_URL
 from util.page_actions import login
-from util.page_actions import add_product_to_cart, add_product_to_cart_from_all_products
-
+from util.page_actions import add_product_to_cart
 
 
 def test_shopping_cart_item_add_from_main_page():
@@ -12,6 +14,7 @@ def test_shopping_cart_item_add_from_main_page():
         page = browser.new_page()
         login(page, SWAG_BASE_URL, username, password)
         page.goto(Inventory_URL)
+
 
         # when
         page.get_by_text('Sauce Labs Backpack');
