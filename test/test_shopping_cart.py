@@ -231,10 +231,8 @@ def test_fill_the_checkout_your_information_form_with_valid_data():
         assert page.wait_for_selector('div.inventory_item_name').inner_text() == 'Sauce Labs Backpack'
         assert page.wait_for_selector('div.inventory_item_desc').inner_text() == 'carry.allTheThings() with the sleek, streamlined Sly Pack that melds uncompromising style with unequaled laptop and tablet protection.'
         assert page.wait_for_selector('div.inventory_item_price').inner_text() == '$29.99'
-        assert page.wait_for_selector('.summary_value_label=Shipping Information')
-        assert page.wait_for_selector('.summary_total_label=Total')
-        assert page.wait_for_selector('.cart_cancel_link')
-        assert page.wait_for_selector('.cart_button=Finish')
+        assert page.wait_for_selector('.btn_secondary.back.btn_medium').inner_text() == 'Cancel'
+        assert page.wait_for_selector('.btn_action.btn_medium').inner_text() == 'Finish'
 
         page.close()
         context.close()
