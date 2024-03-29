@@ -182,8 +182,7 @@ def test_checkout_page_is_displayed_correclty():
         page = context.new_page()
         login(page, SWAG_BASE_URL, username, password)
         page.goto(Inventory_URL)
-        add_to_cart_button = page.wait_for_selector('.btn_inventory')
-        add_to_cart_button.click()
+        add_product_to_cart(page, 'Sauce Labs Backpack')
         shopping_cart_icon = page.wait_for_selector('.shopping_cart_container')
         shopping_cart_icon.click()
         assert page.query_selector('.cart_item') is not None
@@ -205,4 +204,39 @@ def test_checkout_page_is_displayed_correclty():
         browser.close()
 
 
+
+def test_fill_the_checkout_your_information_form_with_valid_data():
+    with sync_playwright() as playwright:
+        # given
+        browser = playwright.chromium.launch(headless=False, slow_mo=1000)
+        context = browser.new_context()
+        page = context.new_page()
+        login(page, SWAG_BASE_URL, username, password)
+        page.goto(Inventory_URL)
+        add_product_to_cart(page, 'Sauce Labs Backpack')
+        shopping_cart_icon = page.wait_for_selector('.shopping_cart_container')
+        shopping_cart_icon.click()
+        assert page.query_selector('.cart_item') is not None
+        checkout_button = page.wait_for_selector('.btn_action.btn_medium')
+        checkout_button.click()
+
+        # when
+        page.fill('#first-name', 'Katya')
+        page.fill('#last-name', 'Korniichuk')
+        page.fill('#postal-code', '92122')
+        continue_button = page.wait_for_selector('.cart_button')
+        continue_button.click()
+
+        # then
+        assert page.wait_for_selector('div.inventory_item_name').inner_text() == 'Sauce Labs Backpack'
+        assert page.wait_for_selector('div.inventory_item_desc').inner_text() == 'carry.allTheThings() with the sleek, streamlined Sly Pack that melds uncompromising style with unequaled laptop and tablet protection.'
+        assert page.wait_for_selector('div.inventory_item_price').inner_text() == '$29.99'
+        assert page.wait_for_selector('.summary_value_label=Shipping Information')
+        assert page.wait_for_selector('.summary_total_label=Total')
+        assert page.wait_for_selector('.cart_cancel_link')
+        assert page.wait_for_selector('.cart_button=Finish')
+
+        page.close()
+        context.close()
+        browser.close()
 
