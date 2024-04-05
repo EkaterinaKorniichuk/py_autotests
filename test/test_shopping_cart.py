@@ -241,7 +241,7 @@ def test_fill_the_checkout_your_information_form_with_valid_data():
 def test_check_that_the_first_name_field_is_mandatory_on_Your_information_page():
     with sync_playwright() as playwright:
        # given
-       browser = playwright.chromium.launch(headless=False, slow_mo=1000)
+       browser = playwright.chromium.launch(headless=False, slow_mo=500)
        context = browser.new_context()
        page = context.new_page()
        login(page, SWAG_BASE_URL, username, password)
@@ -260,8 +260,8 @@ def test_check_that_the_first_name_field_is_mandatory_on_Your_information_page()
        continue_button.click()
 
        # then
-       error_message = page.wait_for_selector('.error-message')
-       assert error_message.inner_text() == 'First name is required'
+       error_message = page.wait_for_selector('.error-message-container h3')
+       assert error_message.inner_text() == 'Error: First Name is required'
 
        page.close()
        context.close()
