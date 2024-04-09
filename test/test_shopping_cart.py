@@ -266,3 +266,65 @@ def test_check_that_the_first_name_field_is_mandatory_on_Your_information_page()
        page.close()
        context.close()
        browser.close()
+
+def test_check_that_the_last_name_field_is_mandatory_on_Your_information_page():
+    with sync_playwright() as playwright:
+        # given
+        browser = playwright.chromium.launch(headless=False, slow_mo=500)
+        context = browser.new_context()
+        page = context.new_page()
+        login(page, SWAG_BASE_URL, username, password)
+        page.goto(Inventory_URL)
+        add_product_to_cart(page, 'Sauce Labs Backpack')
+        shopping_cart_icon = page.wait_for_selector('.shopping_cart_container')
+        shopping_cart_icon.click()
+        assert page.query_selector('.cart_item') is not None
+        checkout_button = page.wait_for_selector('.btn_action.btn_medium')
+        checkout_button.click()
+
+        # when
+        page.fill('#first-name', 'Katya')
+        page.fill('#postal-code', '92122')
+        continue_button = page.wait_for_selector('.cart_button')
+        continue_button.click()
+
+        # then
+        error_message = page.wait_for_selector('.error-message-container h3')
+        assert error_message.inner_text() == 'Error: Last Name is required'
+
+        page.close()
+        context.close()
+        browser.close()
+
+def test_check_zip_code_field_is_mandatory_on_Your_information_page():
+    with sync_playwright() as playwright:
+        # given
+        browser = playwright.chromium.launch(headless=False, slow_mo=500)
+        context = browser.new_context()
+        page = context.new_page()
+        login(page, SWAG_BASE_URL, username, password)
+        page.goto(Inventory_URL)
+        add_product_to_cart(page, 'Sauce Labs Backpack')
+        shopping_cart_icon = page.wait_for_selector('.shopping_cart_container')
+        shopping_cart_icon.click()
+        assert page.query_selector('.cart_item') is not None
+        checkout_button = page.wait_for_selector('.btn_action.btn_medium')
+        checkout_button.click()
+
+        # when
+        page.fill('#first-name', 'Katya')
+        page.fill('#last-name', 'Korniichuk')
+        continue_button = page.wait_for_selector('.cart_button')
+        continue_button.click()
+
+        # then
+        error_message = page.wait_for_selector('.error-message-container h3')
+        assert error_message.inner_text() == 'Error: Postal Code is required'
+
+        page.close()
+        context.close()
+        browser.close()
+
+
+
+
