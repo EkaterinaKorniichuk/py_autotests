@@ -328,3 +328,37 @@ def test_check_zip_code_field_is_mandatory_on_Your_information_page():
 
 
 
+def test_finish_page_is_displayed_correctly():
+    with sync_playwright() as playwright:
+        # given
+        browser = playwright.chromium.launch(headless=False, slow_mo=500)
+        context = browser.new_context()
+        page = context.new_page()
+        login(page, SWAG_BASE_URL, username, password)
+        page.goto(Inventory_URL)
+        add_product_to_cart(page, 'Sauce Labs Backpack')
+        shopping_cart_icon = page.wait_for_selector('.shopping_cart_container')
+        shopping_cart_icon.click()
+        assert page.query_selector('.cart_item') is not None
+        checkout_button = page.wait_for_selector('.btn_action.btn_medium')
+        checkout_button.click()
+        page.fill('#first-name', 'Katya')
+        page.fill('#last-name', 'Korniichuk')
+        page.fill('#postal-code', '92122')
+        continue_button = page.wait_for_selector('.cart_button')
+        continue_button.click()
+
+        # when
+        finish_button = page.wait_for_selector('.btn_action.btn_medium')
+        finish_button.click()
+
+        # then
+        assert page.wait_for_selector('.complete-header').inner_text() == 'Thank you for your order!'
+        assert page.wait_for_selector('.complete-text').inner_text() == 'Your order has been dispatched, and will arrive just as fast as the pony can get there!'
+        assert page.wait_for_selector('.btn_primary').inner_text() == 'Back Home'
+
+        page.close()
+        context.close()
+        browser.close()
+
+
