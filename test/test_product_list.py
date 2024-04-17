@@ -1,4 +1,4 @@
-from playwright.sync_api import sync_playwright
+from playwright.sync_api import sync_playwright, Page
 import sys
 import os
 
@@ -6,6 +6,8 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
 from util.credentials import username, incorrect_username, password, SWAG_BASE_URL, Inventory_URL
 from util.page_actions import login
+from util.LoginPage import LoginPage
+from util.HomePage import HomePage
 
 def test_product_list_valid_сredentials():
     with sync_playwright() as playwright:
@@ -142,4 +144,25 @@ def test_product_page_displays_correctly():
 
 
         browser.close()
+
+def test_verifying_that_the_all_items_section_opens_when_clicked(browser):
+    # given
+    page = browser.new_page()
+    login_page = LoginPage(page)
+    login_page.goto_login_page("https://www.saucedemo.com/")
+    login_page.login("standard_user", "secret_sauce")
+    home_page = HomePage(page)
+    home_page.verify_page_title("Swag Labs")
+    home_page.verify_all_products_displayed()
+
+    # when
+    page.click('.bm-burger-button')
+    page.click('.bm-item.menu-item')
+
+    # then
+    assert "Swag Labs" in page.title()
+    assert page.query_selector('.inventory_list') is not None
+
+
+
 
