@@ -164,5 +164,26 @@ def test_verifying_that_the_all_items_section_opens_when_clicked(browser):
     assert page.query_selector('.inventory_list') is not None
 
 
+def test_verifying_that_the_About_section_opens_when_clicked():
+    with sync_playwright() as playwright:
+        # given
+        browser = playwright.chromium.launch(headless=False, slow_mo=500)
+        page = browser.new_page()
+        login_page = LoginPage(page)
+        login_page.goto_login_page("https://www.saucedemo.com/")
+        login_page.login("standard_user", "secret_sauce")
+        home_page = HomePage(page)
+        home_page.verify_page_title("Swag Labs")
+        home_page.verify_all_products_displayed()
+
+        # when
+        page.click('.bm-burger-button')
+        page.click('.bm-item.menu-item[href="https://saucelabs.com/"]')
+
+        # then
+        assert "Sauce Labs: Cross Browser Testing, Selenium Testing & Mobile Testing" in page.title()
+        assert page.query_selector('h1').inner_text() == 'Website and mobile testing\nat every stage of development'
+        assert page.url == "https://saucelabs.com/"
+        browser.close()
 
 
