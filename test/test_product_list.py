@@ -187,3 +187,23 @@ def test_verifying_that_the_About_section_opens_when_clicked():
         browser.close()
 
 
+def test_verifying_that_the_Logout_section_opens_when_clicked():
+    with sync_playwright() as playwright:
+        # given
+        browser = playwright.chromium.launch(headless=False, slow_mo=500)
+        page = browser.new_page()
+        login_page = LoginPage(page)
+        login_page.goto_login_page("https://www.saucedemo.com/")
+        login_page.login("standard_user", "secret_sauce")
+        home_page = HomePage(page)
+        home_page.verify_page_title("Swag Labs")
+        home_page.verify_all_products_displayed()
+
+        # when
+        page.click('.bm-burger-button')
+        page.click('.bm-item.menu-item[href="#"][data-test="logout-sidebar-link"]')
+
+        # then
+       
+
+
