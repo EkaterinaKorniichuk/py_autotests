@@ -204,6 +204,11 @@ def test_verifying_that_the_Logout_section_opens_when_clicked():
         page.click('.bm-item.menu-item[href="#"][data-test="logout-sidebar-link"]')
 
         # then
-       
+        assert "https://www.saucedemo.com/" in page.url()
+        assert page.query_selector('input[name="user-name"]') is not None
+        assert page.query_selector('input[name="password"]') is not None
+
+        browser.close()
+
 
 
