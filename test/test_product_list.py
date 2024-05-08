@@ -204,9 +204,33 @@ def test_verifying_that_the_Logout_section_opens_when_clicked():
         page.click('.bm-item.menu-item[href="#"][data-test="logout-sidebar-link"]')
 
         # then
-        assert "https://www.saucedemo.com/" in page.url()
+        expected_url = "https://www.saucedemo.com/"
+        assert expected_url in page.url
         assert page.query_selector('input[name="user-name"]') is not None
         assert page.query_selector('input[name="password"]') is not None
+
+        browser.close()
+
+def test_facebook_button_works_correctly():
+    with sync_playwright() as playwright:
+        # given
+        browser = playwright.chromium.launch(headless=False, slow_mo=500)
+        page = browser.new_page()
+        login_page = LoginPage(page)
+        login_page.goto_login_page("https://www.saucedemo.com/")
+        login_page.login("standard_user", "secret_sauce")
+        home_page = HomePage(page)
+        home_page.verify_page_title("Swag Labs")
+        home_page.verify_all_products_displayed()
+
+        # when
+        page.click('.social_facebook')
+
+        # then
+        assert "https://www.facebook.com/" in page.url
+        assert page.query_selector('input[name="username"]') is not None
+        assert page.query_selector('input[name="password"]') is not None
+        assert page.inner_text('.facebook-title') == "See more on Facebook"
 
         browser.close()
 
