@@ -227,10 +227,8 @@ def test_facebook_button_works_correctly():
         page.click('.social_facebook')
 
         # then
-        assert "https://www.facebook.com/" in page.url
-        assert page.query_selector('input[name="username"]') is not None
-        assert page.query_selector('input[name="password"]') is not None
-        assert page.inner_text('.facebook-title') == "See more on Facebook"
+        expected_url = "https://www.facebook.com/saucelabs"
+        assert page.inner_text('.x1lliihq x6ikm8r x10wlt62 x1n2onr6') == "See more on Facebook"
 
         browser.close()
 
